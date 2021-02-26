@@ -356,7 +356,7 @@ class JsonRpcServer {
             transactionIndex: block ? block.transactions.findIndex(tx => tx.hash().toHex() === hash) : undefined,
             blockNumber: receipt.blockHeight,
             blockHash: receipt.blockHash.toHex(),
-            confirmations: (await this._client.getHeadHeight()) - receipt.blockHeight,
+            confirmations: (await this._client.getHeadHeight()) - receipt.blockHeight + 1,
             timestamp: block ? block.timestamp : undefined
         };
     }
@@ -743,7 +743,7 @@ class JsonRpcServer {
             accountsHash: block.accountsHash.toHex(),
             difficulty: block.difficulty,
             timestamp: block.timestamp,
-            confirmations: (await this._client.getHeadHeight()) - block.height
+            confirmations: (await this._client.getHeadHeight()) - block.height + 1
         };
         if (block.isFull()) {
             obj.miner = block.minerAddr.toHex();
