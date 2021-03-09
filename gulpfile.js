@@ -257,6 +257,7 @@ const sources = {
         './src/main/generic/utils/crc/CRC8.js',
         './src/main/generic/utils/number/BigNumber.js',
         './src/main/generic/utils/number/NumberUtils.js',
+        './src/main/generic/utils/merkle/MerkleTree.js',
         './src/main/generic/utils/merkle/MerklePath.js',
         './src/main/generic/utils/mnemonic/MnemonicUtils.js',
         './src/main/generic/utils/string/StringUtils.js',
