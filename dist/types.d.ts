@@ -1021,7 +1021,7 @@ export class Hash extends Serializable {
         SHA256: 3;
         SHA512: 4;
         toString(hashAlgorithm: Hash.Algorithm): string;
-        fromString(str: string): Hash.Algorithm;
+        fromAny(algorithm: Hash.Algorithm | string): Hash.Algorithm;
     };
     public static light(arr: Uint8Array): Hash;
     public static blake2b(arr: Uint8Array): Hash;
@@ -1287,6 +1287,7 @@ export abstract class Account {
         toString(type: Account.Type): string;
         fromAny(type: Account.Type | string): Account.Type;
     };
+    public static TYPE_MAP: Map<Account.Type, typeof Account>;
     public static BalanceError: Error;
     public static DoubleTransactionError: Error;
     public static ProofError: Error;
