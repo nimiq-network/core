@@ -1,4 +1,4 @@
-FROM node:10-stretch
+FROM node:12-stretch
 
 # Get repo key and install it
 RUN wget -qO - https://www.nimiq.com/nimiq-signing-key.pub | apt-key add -

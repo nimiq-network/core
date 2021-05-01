@@ -1,4 +1,4 @@
-FROM node:10-stretch
+FROM node:12-stretch
 
 # Build from master branch by default.
 # One can override this using --build-arg when building the docker
