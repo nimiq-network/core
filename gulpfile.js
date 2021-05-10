@@ -11,8 +11,14 @@ const replace = require('gulp-string-replace');
 const source = require('vinyl-source-stream');
 const sourcemaps = require('gulp-sourcemaps');
 const uglify = require('gulp-uglify-es').default;
+const sriToolbox = require("sri-toolbox");
 
 const env = minimist(process.argv.slice(2));
+
+function sri(filename) {
+    const code = fs.readFileSync(filename);
+    return sriToolbox.generate({}, code);
+}
 
 const sources = {
     platform: {
@@ -454,6 +460,8 @@ gulp.task('run-build-web-babel', function () {
             .pipe(source('babel.js'))
             .pipe(buffer()),
         gulp.src(BROWSER_SOURCES, {base: '.'})
+            .pipe(replace('{WORKER_WASM_HASH}', sri('dist/worker-wasm.js')))
+            .pipe(replace('{WORKER_JS_HASH}', sri('dist/worker-js.js')))
             .pipe(sourcemaps.init({loadMaps: true}))
             .pipe(concat('web.js'))
             .pipe(babel(babel_config)))
@@ -466,6 +474,8 @@ gulp.task('run-build-web-babel', function () {
 
 gulp.task('run-build-web', function () {
     return gulp.src(BROWSER_SOURCES, {base: '.'})
+        .pipe(replace('{WORKER_WASM_HASH}', sri('dist/worker-wasm.js')))
+        .pipe(replace('{WORKER_JS_HASH}', sri('dist/worker-js.js')))
         .pipe(sourcemaps.init({loadMaps: true}))
         .pipe(concat('web.js'))
         .pipe(uglify(uglify_config))
@@ -483,6 +493,8 @@ const BROWSER_MODULE_SOURCES = [
 
 gulp.task('run-build-web-module', function () {
     return gulp.src(BROWSER_MODULE_SOURCES, {base: '.'})
+        .pipe(replace('{WORKER_WASM_HASH}', sri('dist/worker-wasm.js')))
+        .pipe(replace('{WORKER_JS_HASH}', sri('dist/worker-js.js')))    
         .pipe(sourcemaps.init({loadMaps: true}))
         .pipe(concat('web.esm.js'))
         .pipe(uglify(uglify_config))
@@ -521,6 +533,8 @@ gulp.task('run-build-offline-babel', function () {
             .pipe(source('babel.js'))
             .pipe(buffer()),
         gulp.src(OFFLINE_SOURCES, {base: '.'})
+            .pipe(replace('{WORKER_WASM_HASH}', sri('dist/worker-wasm.js')))
+            .pipe(replace('{WORKER_JS_HASH}', sri('dist/worker-js.js')))    
             .pipe(sourcemaps.init({loadMaps: true}))
             .pipe(concat('web-offline.js'))
             .pipe(babel(babel_config)))
@@ -533,6 +547,8 @@ gulp.task('run-build-offline-babel', function () {
 
 gulp.task('run-build-offline', function () {
     return gulp.src(OFFLINE_SOURCES, {base: '.'})
+        .pipe(replace('{WORKER_WASM_HASH}', sri('dist/worker-wasm.js')))
+        .pipe(replace('{WORKER_JS_HASH}', sri('dist/worker-js.js')))    
         .pipe(sourcemaps.init({loadMaps: true}))
         .pipe(concat('web-offline.js'))
         .pipe(uglify(uglify_config))
@@ -542,6 +558,8 @@ gulp.task('run-build-offline', function () {
 
 gulp.task('run-build-web-istanbul', function () {
     return gulp.src(BROWSER_SOURCES.map(f => f.indexOf('./src/main') === 0 ? `./.istanbul/${f}` : f), {base: '.'})
+        .pipe(replace('{WORKER_WASM_HASH}', sri('dist/worker-wasm.js')))
+        .pipe(replace('{WORKER_JS_HASH}', sri('dist/worker-js.js')))    
         .pipe(sourcemaps.init({loadMaps: true}))
         .pipe(concat('web-istanbul.js'))
         .pipe(uglify(uglify_config))

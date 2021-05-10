@@ -110,6 +110,7 @@
     "minimist": "^1.2.0",
     "node-deb": "^0.10.4",
     "node-gyp": "^5.0.1",
+    "sri-toolbox": "^0.2.0",
     "tslint": "^5.12.1",
     "typescript": "^3.3.3",
     "vinyl-buffer": "^1.0.1",

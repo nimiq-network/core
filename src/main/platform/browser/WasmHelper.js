@@ -7,9 +7,9 @@ class WasmHelper {
     static async doImportBrowser() {
         WasmHelper._importBrowserPromise = WasmHelper._importBrowserPromise || (async () => {
             if (await WasmHelper.importWasmBrowser('worker-wasm.wasm')) {
-                await WasmHelper.importScriptBrowser('worker-wasm.js');
+                await WasmHelper.importScriptBrowser('worker-wasm.js', 'Module', '{WORKER_WASM_HASH}');
             } else {
-                await WasmHelper.importScriptBrowser('worker-js.js');
+                await WasmHelper.importScriptBrowser('worker-js.js', 'Module', '{WORKER_JS_HASH}');
             }
         })();
         try {
@@ -67,7 +67,7 @@ class WasmHelper {
         return WasmHelper.importScriptBrowser(script, module);
     }
 
-    static async importScriptBrowser(script, module = 'Module') {
+    static async importScriptBrowser(script, module = 'Module', integrity=null) {
         if (module && WasmHelper._global[module] && WasmHelper._global[module].asm) return false;
         script = WasmHelper._adjustScriptPath(script);
 
@@ -85,7 +85,7 @@ class WasmHelper {
             } else if (typeof window === 'object') {
                 await new Promise((resolve) => {
                     WasmHelper._moduleLoadedCallbacks[module] = resolve;
-                    WasmHelper._loadBrowserScript(script);
+                    WasmHelper._loadBrowserScript(script, integrity);
                 });
                 WasmHelper._global[module] = WasmHelper._global[module](moduleSettings);
             } else if (typeof require === 'function') {
@@ -107,11 +107,15 @@ class WasmHelper {
         }
     }
 
-    static _loadBrowserScript(url) {
+    static _loadBrowserScript(url, integrity) {
         const head = document.getElementsByTagName('head')[0];
         const script = document.createElement('script');
         script.type = 'text/javascript';
         script.src = url;
+        if (integrity != null) {
+            script.integrity = integrity;
+            script.crossorigin = 'anonymous';
+        }
         head.appendChild(script);
     }
 
